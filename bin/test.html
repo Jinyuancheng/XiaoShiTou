@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <input type="button" name="" value="保存" id="save" />
+    <!--用来调用注册的Activex控件-->
+    <object id="Test" classid="clsid:984770F0-A5B6-441f-A01A-58B6F1E31E3F" width="0" height="0"></object>
+    <!--注册回调函数-->
+    <script language="javascript" for="Test" event="OnRecvTempMsg(MsgData)" type="text/javascript">
+        OnRecvTempMsg(MsgData);
+    </script>
+    <script>
+        var Test = document.getElementById("Test");
+        var save = document.getElementById("save");
+        //要下载的图片信息
+        var Arr = {
+            arr: [
+                {
+                    "Url": "http://file02.16sucai.com/d/file/2015/0408/779334da99e40adb587d0ba715eca102.jpg",
+                    "Path": "D://JinziWorkSpace",
+                    "Name": "jinzi.jpg"
+                },
+                {
+                    "Url": "http://dmimg.5054399.com/allimg/pkm/pk/22.jpg",
+                    "Path": "D://JinziWorkSpace",
+                    "Name": "皮卡丘.jpg"
+                }
+            ]
+        }
+        save.onclick = function () {
+            //单个对象传入1
+            //DownLoadPic(JSON.stringify(Arr.arr[0]), 1);
+            //数组传入2
+            DownLoadPic(JSON.stringify(Arr.arr), 2);
+            //将图片url转换为base64
+            UrlToBase64("http://dmimg.5054399.com/allimg/pkm/pk/22.jpg");
+        }
+
+    </script>
+
+    <!--Activex控件接口函数-->
+    <script>
+        /**
+        *
+        * 下载图片到本地
+        *
+        * @param Json 根据type值决定 type为1 json为json字符串 type为2 json为json字符串数组
+        * @param Type
+        */
+        function DownLoadPic(Json, Type) {
+            Test.DownPicWithUrl(Json, Type);
+        }
+
+        /**
+         * 
+         * 将图片url转换为base64 通过回调函数回调回来
+         * 
+         * @param Url 图片的url
+         */
+        function UrlToBase64(Url) {
+            Test.UrlToBase64(Url);
+        }
+
+        /**
+         * 
+         * 释放控件内存 关闭线程等操作
+         * */
+        function DelActivex() {
+            Test.DelMemory();
+        }
+
+        /**
+         * 控件回调函数，所有的数据都是从该接口返回，控件数据处理
+         * */
+        function OnRecvTempMsg(MsgData) {
+            alert(MsgData);
+            var Data = JSON.parse(MsgData);
+            if (Data.Type == "Base64") {
+                alert(Data.data);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
